@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analisador de Email</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div>
+    <form id="emailForm">
+        <div>
+        <h1> Analisador de Emails </h1>
+        <h2>Carregar Email para Análise</h2>
+        </div>
+        <label for="emailFile">Selecione um arquivo de email (.eml, .txt, .pdf):</label>
+        <input id="emailFile" type="file" accept=".eml,.txt,.pdf" />
+        <button class="bg-sky-500 hover:bg-sky-700" type="button" onclick="enviarParaAnalise()">Analisar Email</button>
+
+        <h3 id="categoria"></h3>
+        <p id="sugestao"></p>
+    </form>
+    </div>
+    
+    <script>
+        async function enviarParaAnalise() {
+            const fileInput = document.getElementById('emailFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Por favor, selecione um arquivo.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('email_arquivo', file);
+
+            const response = await fetch('/analisar-email', {
+                method: 'POST',
+                body: formData
+            });
+
+            const resultado = await response.json();
+            document.getElementById('categoria').innerText = 'Categoria: ' + resultado.categoria;
+            document.getElementById('sugestao').innerText = 'Sugestão: ' + resultado.sugestao;
+        }
+    </script>
+</body>
+</html>
