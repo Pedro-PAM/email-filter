@@ -8,7 +8,7 @@ genai.configure(api_key=os.environ.get("GOOGLE_API_KEY"))
 model = genai.GenerativeModel('gemini-1.5-pro-latest')
 def classificar_email(texto_do_email):
     try:
-        prompt = f"Analise o texto a seguir e classifique-o respondendo APENAS com a palavra 'Produtivo' ou 'Improdutivo'. O texto é: '{texto_do_email}'"
+        prompt = f"Analise o texto a seguir e classifique-o respondendo APENAS com a palavra 'Produtivo' ou 'Improdutivo', no contexto de uma empresa. Caso não tenha informações úteis pertinentes a empresa, como por exemplo, 'SPAM', ou um email informal, classifique-o como improdutivo, caso contrário, produtivo. O texto é: '{texto_do_email}'"
         response = model.generate_content(prompt)
         return response.text.strip()
     except Exception as e:
@@ -74,7 +74,7 @@ def handle_analise():
     classificacao_normalizada = classificacao.lower().strip().replace(".", "")
 
     if "produtivo" in classificacao_normalizada or "improdutivo" in classificacao_normalizada:
-        resposta_categoria = "Produtivo" if "produtivo" in classificacao_normalizada else "Improdutivo"
+        resposta_categoria = "Improdutivo" if "improdutivo" in classificacao_normalizada else "Produtivo"
         resposta_automatica = gerar_resposta_automatica(resposta_categoria, conteudo)
         resultado_final = {
             "classificacao": resposta_categoria,
